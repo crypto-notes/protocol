@@ -23,7 +23,7 @@ describe('Cryptonotes', function () {
     const cryptonotes = (await Cryptonotes.deploy()) as Cryptonotes
     await cryptonotes.deployed()
     
-    const tx = await cryptonotes.initialize('Test Commemorative Cryptonotes', 'TCC', 18)
+    const tx = await cryptonotes.initialize('Test Commemorative Cryptonotes', 'TCC', 18, AddressZero)
     await tx.wait()
     
     return cryptonotes
@@ -218,7 +218,7 @@ describe('Cryptonotes', function () {
       }
       expect(await cryptonotes['balanceOf(address)'](minter.address)).to.eq(10)
       for (let t of tokenDatas.slice(0, 4)) {
-        await cryptonotes.burn(t.id)
+        await cryptonotes.withdraw(t.id)
       }
       expect(await cryptonotes['balanceOf(address)'](minter.address)).to.eq(6)
 

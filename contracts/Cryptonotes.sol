@@ -4,6 +4,9 @@ pragma solidity 0.8.17;
 
 import {StringsUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {AutomationCompatible} from "@chainlink/contracts/src/v0.8/AutomationCompatible.sol";
 import {
   ERC3525Upgradeable,
   IERC3525Metadata,
@@ -12,7 +15,7 @@ import {
 import {StringConvertor} from "@cryptonotes/core/contracts/utils/StringConvertor.sol";
 
 /// @notice The implementation of the cryptonotes demo.
-contract Cryptonotes is ERC3525Upgradeable {
+contract Cryptonotes is ERC3525Upgradeable, AutomationCompatible, ReentrancyGuardUpgradeable {
   /* ========== error definitions ========== */
 
   error InsufficientFund();
@@ -37,6 +40,8 @@ contract Cryptonotes is ERC3525Upgradeable {
   }
 
   /* ========== STATE VARIABLES ========== */
+
+  AggregatorV3Interface internal priceFeed;
 
   mapping(uint256 => SlotDetail) private _slotDetails;
 
@@ -71,12 +76,29 @@ contract Cryptonotes is ERC3525Upgradeable {
   function initialize(
     string memory name_,
     string memory symbol_,
-    uint8 decimals_
+    uint8 decimals_,
+    address priceFeedAddr
   ) public initializer {
     __ERC3525_init(name_, symbol_, decimals_);
+    __ReentrancyGuard_init();
+    priceFeed = AggregatorV3Interface(priceFeedAddr);
   }
 
   /* ========== VIEWS ========== */
+
+  /**
+   * Returns the latest price
+   */
+  function getLatestPrice() public view returns (int) {
+    (
+      /*uint80 roundID*/,
+      int price,
+      /*uint startedAt*/,
+      /*uint timeStamp*/,
+      /*uint80 answeredInRound*/
+    ) = priceFeed.latestRoundData();
+    return price;
+  }
 
   function getSlotDetail(uint256 slot_) public view returns (SlotDetail memory) {
     return _slotDetails[slot_];
@@ -188,6 +210,37 @@ contract Cryptonotes is ERC3525Upgradeable {
     _mintValue(_msgSender(), slot, value_);
   }
 
+  /**
+   * @notice Withdraws the value from a specific tokenId.
+   *
+   * @param tokenId_ The tokenId to be withdrawn.
+   */
+  function withdraw(uint256 tokenId_) external nonReentrant {
+    uint256 slot = slotOf(tokenId_);
+    SlotDetail memory sd = _slotDetails[slot];
+    address asset = sd.underlying;
+    
+    if (asset == address(0)) {
+      (
+        bool sent,
+        /** bytes memory data */
+      ) = payable(_msgSender()).call{value: balanceOf(tokenId_)}("");
+      require(sent, "Failed to send Ether");
+    } else {
+      IERC20Upgradeable(asset).transfer(_msgSender(), balanceOf(tokenId_));
+    }
+
+    _burn(tokenId_);
+  }
+
+  function checkUpkeep(bytes calldata /* checkData */) external view override returns (bool upkeepNeeded, bytes memory /* performData */) {
+    // TODO To be implemented
+  }
+
+  function performUpkeep(bytes calldata /* performData */) external override {
+    // TODO To be implemented
+  }
+
   /* ========== RESTRICTED FUNCTIONS ========== */
 
   /**
@@ -248,15 +301,6 @@ contract Cryptonotes is ERC3525Upgradeable {
     _mintValue(owner, newTokenId_, slotOf(fromTokenId_), splitUnits_);
 
     emit Split(owner, fromTokenId_, newTokenId_, splitUnits_);
-  }
-
-  /**
-   * @notice Burns the specific tokenId, only the owner or approved operator can execute.
-   *
-   * @param tokenId_ The tokenId to be burned.
-   */
-  function burn(uint256 tokenId_) external onlyAuthorised(tokenId_) {
-    _burn(tokenId_);
   }
 
   /* ========== INTERNAL FUNCTIONS ========== */
