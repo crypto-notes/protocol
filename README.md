@@ -28,7 +28,7 @@ or
 
 ## Deploy
 
-`yarn hardhat run scripts/deploy-cryptonotes.ts` or `npx hardhat run scripts/deploy-cryptonotes.ts`
+`yarn hardhat run scripts/deploy-cryptonotes.ts --network goerli` or `npx hardhat run scripts/deploy-cryptonotes.ts --network goerli`
 
 ## More
 

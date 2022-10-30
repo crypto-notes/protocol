@@ -7,16 +7,20 @@ async function main() {
   console.log('signer address:', address)
 
   // We get the contract to deploy
+  const NotesMetadataDescriptor = await ethers.getContractFactory('NotesMetadataDescriptor')
+  const descriptor = await NotesMetadataDescriptor.deploy()
+  await descriptor.deployed()
+
   const Cryptonotes = await ethers.getContractFactory('Cryptonotes')
-  
   const cryptonotes = await Cryptonotes.deploy()
   await cryptonotes.deployed()
+
   const tx = await cryptonotes.initialize(
     'Ethereum Commemorative Cryptonotes',
     'ETHCC',
     18,
-    ethers.constants.AddressZero,
-    ethers.constants.AddressZero
+    '0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e',
+    descriptor.address
   )
   await tx.wait()
   
