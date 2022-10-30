@@ -250,7 +250,8 @@ contract NotesMetadataDescriptor is IERC3525MetadataDescriptor {
             '<pattern id="pattern-0-0" patternTransform="matrix(1, 0, 0, 1, 217.516244, 83.242008)" xlink:href="#pattern-0"/>',
             '<pattern x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse" viewBox="0 0 100 100" id="pattern-0">',
               '<rect x="0" y="0" width="50" height="100" style="fill: ',
-                balanceInUsd_ > twapInUsd_ ? "green" : "red",
+                balanceInUsd_ == twapInUsd_ ? "grey"
+                  : balanceInUsd_ > twapInUsd_ ? "green" : "red",
               ';"/>',
             '</pattern>',
           '</defs>'

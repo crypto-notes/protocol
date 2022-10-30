@@ -31,7 +31,7 @@ contract Cryptonotes is ICryptonotes, OwnableUpgradeable, ERC3525Upgradeable, Re
   /* ========== STATE VARIABLES ========== */
 
   AggregatorV3Interface internal priceFeed;
-  uint80 private roundsBack;
+  uint80 private roundsBack = 24;
 
   mapping(uint256 => SlotDetail) private _slotDetails;
 
@@ -83,6 +83,7 @@ contract Cryptonotes is ICryptonotes, OwnableUpgradeable, ERC3525Upgradeable, Re
     address metadataDescriptor
   ) public initializer {
     __ERC3525_init(name_, symbol_, decimals_);
+    __Ownable_init();
     __ReentrancyGuard_init();
     priceFeed = AggregatorV3Interface(priceFeedAddr);
     _setMetadataDescriptor(metadataDescriptor);
