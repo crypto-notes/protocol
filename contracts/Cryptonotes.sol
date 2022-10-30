@@ -2,16 +2,12 @@
 
 pragma solidity 0.8.17;
 
-import {StringsUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {SafeCastUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import {
-  ERC3525Upgradeable,
-  IERC3525Metadata
-} from "@cryptonotes/core/contracts/ERC3525Upgradeable.sol";
+import { ERC3525Upgradeable } from "@cryptonotes/core/contracts/ERC3525Upgradeable.sol";
 import {StringConvertor} from "@cryptonotes/core/contracts/utils/StringConvertor.sol";
 import {ICryptonotes} from "./ICryptonotes.sol";
 
