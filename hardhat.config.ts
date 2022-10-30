@@ -1,6 +1,9 @@
 import { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
 import 'hardhat-contract-sizer';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -10,6 +13,18 @@ const config: HardhatUserConfig = {
         enabled: true,
         runs: 200,
       },
+    },
+  },
+  networks: {
+    goerli: {
+      url: process.env.GOERLI_RPC || '',
+      chainId: 5,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] :  [],
+    },
+    mumbai: {
+      url: process.env.MUMBAI_RPC || '',
+      chainId: 80001,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] :  [],
     },
   },
   gasReporter: {
@@ -29,7 +44,3 @@ const config: HardhatUserConfig = {
 export default config;
 
 // Warning: Contract code size is 31600 bytes and exceeds 24576 bytes (a limit introduced in Spurious Dragon). This contract may not be deployable on Mainnet. Consider enabling the optimizer (with a low "runs" value!), turning off revert strings, or using libraries.
-//   --> contracts/Cryptonotes.sol:11:1:
-//    |
-// 11 | contract Cryptonotes is ERC3525Upgradeable {
-//    | ^ (Relevant source part starts here and spans across multiple lines).

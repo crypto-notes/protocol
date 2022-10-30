@@ -11,7 +11,13 @@ async function main() {
   
   const cryptonotes = await Cryptonotes.deploy()
   await cryptonotes.deployed()
-  const tx = await cryptonotes.initialize('Ethereum Commemorative Cryptonotes', 'ETHCC', 18)
+  const tx = await cryptonotes.initialize(
+    'Ethereum Commemorative Cryptonotes',
+    'ETHCC',
+    18,
+    ethers.constants.AddressZero,
+    ethers.constants.AddressZero
+  )
   await tx.wait()
   
   // const cryptonotes = Cryptonotes.attach('0x')

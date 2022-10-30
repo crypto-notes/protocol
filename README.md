@@ -4,13 +4,15 @@ WIP. Built on top of ERC-3525.
 
 ## Requirements:
 
-- [ ] Shows different background on the commemorative cryptonotes according to the different face values, with the denomination in the below 5 ranges: (0, 0.1), [0.1, 1.0), [1.0, 10.0), [10.0, 20.0), [20.0, inf).
+- [x] Shows different background on the commemorative cryptonotes according to the different face values, with the denomination in the below 5 ranges: (0, 0.1), [0.1, 1.0), [1.0, 10.0), [10.0, 20.0), [20.0, inf).
 
-- [ ] The cryptonotes can be merged or split, and the backgrounds can be dynamically generated in SVG format based on the different denominations.
+  > NOTES: The backgrounds should be dynamically generated in SVG format based on the different denominations, and you can see the preview sample SVGs in `svgs` folder
 
-- [ ] The commemorative cryptonotes can be integrated with the Chainlink data feed to get the ETH price in USD and present the denomination of the note.
+- [x] You can mint, split, merge, and withdraw from a cryptonote.
 
-- [ ] If the current price of the note is higher than a certain average price, such as the five-day average, the background is green, otherwise, the background turns red.
+- [x] Integrate the commemorative cryptonotes with Chainlink data feed to get ETH price in USD and present it on the note.
+
+- [x] If the current price of the note is higher than a certain average price, such as the five-day average, the background is green, otherwise, the background turns red.
 
 ## Install Dependencies
 
@@ -20,6 +22,9 @@ WIP. Built on top of ERC-3525.
 
 `yarn test` or `npm run test`
 
+or
+
+`yarn test:reports` or `npm run test:reports` to run the tests with deployment gas and contracts size reports
 
 ## Deploy
 

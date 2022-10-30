@@ -16,10 +16,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@cryptonotes/core@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@cryptonotes/core/-/core-0.9.1.tgz#7bda3288b215162a3da511b74f5ed89789ce59e7"
-  integrity sha512-cyTsaPmia0H+Ro5tbjiIXtyq5b/nZT8KG6M4XdjZ/wo35MdAChh6r9q9DaSxMAjjeKYWyhwre6Q6r08VwPFN4w==
+"@cryptonotes/core@^0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@cryptonotes/core/-/core-0.9.4.tgz#cca983cb741cff740612a6a57d857ecba810ff4b"
+  integrity sha512-FGYF154QwWDNRBGalCvT6T2TiYUqfFRmJbGjU36TZrHcFI1tOPLxl3nOGb1TyottJv65uiowWgQ2lmxw2eV+tg==
   dependencies:
     "@openzeppelin/contracts-upgradeable" "^4.7.3"
 
@@ -1834,6 +1834,11 @@ dir-glob@^3.0.1:
   integrity sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==
   dependencies:
     path-type "^4.0.0"
+
+dotenv@^16.0.3:
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
+  integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"

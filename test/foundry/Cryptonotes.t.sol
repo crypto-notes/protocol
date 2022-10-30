@@ -9,7 +9,7 @@ contract CryptonotesTest is Test {
 
   function setUp() public {
     cryptonotes = new Cryptonotes();
-    cryptonotes.initialize("Foundry Commemorative Cryptonotes", "FCC", 18, address(0));
+    cryptonotes.initialize("Foundry Commemorative Cryptonotes", "FCC", 18, address(0), address(0));
   }
 
 }
