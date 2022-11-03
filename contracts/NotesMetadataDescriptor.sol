@@ -133,33 +133,6 @@ contract NotesMetadataDescriptor is IERC3525MetadataDescriptor {
             '"order":1,',
             '"display_type":"string"},'
           ),
-          abi.encodePacked(
-            '{"name":"vesting_type",',
-            '"description":"Vesting type that represents the releasing mode of underlying assets.",',
-            '"value":',
-                uint256(slotDetail.vestingType).toString(),
-            ",",
-            '"order":2,',
-            '"display_type":"number"},'
-          ),
-          abi.encodePacked(
-            '{"name":"maturity",',
-            '"description":"Maturity that all underlying assets would be completely released.",',
-            '"value":',
-                uint256(slotDetail.maturity).toString(),
-            ",",
-            '"order":3,',
-            '"display_type":"date"},'
-          ),
-          abi.encodePacked(
-            '{"name":"term",',
-            '"description":"The length of the locking period (in seconds)",',
-            '"value":',
-                uint256(slotDetail.term).toString(),
-            ",",
-            '"order":4,',
-            '"display_type":"number"}'
-          ),
           "]"
         )
         /* solhint-enable */
@@ -167,19 +140,23 @@ contract NotesMetadataDescriptor is IERC3525MetadataDescriptor {
   }
 
   function _tokenName(uint256 tokenId_) internal view returns (string memory) {
+    ICryptonotes note = ICryptonotes(msg.sender);
+    uint256 slot = note.slotOf(tokenId_);
     // solhint-disable-next-line
     return 
       string(
         abi.encodePacked(
-          ICryptonotes(msg.sender).name(), 
+          _slotName(slot), 
           " #", tokenId_.toString()
         )
       );
   }
 
-  function _tokenDescription(uint256 tokenId_) internal pure returns (string memory) {
-    tokenId_;
-    return "";
+  function _tokenDescription(uint256 tokenId_) internal view returns (string memory) {
+    ICryptonotes note = ICryptonotes(msg.sender);
+    uint256 slot = note.slotOf(tokenId_);
+    ICryptonotes.SlotDetail memory sd = note.getSlotDetail(slot);
+    return sd.description;
   }
 
   function _tokenImage(uint256 tokenId_) internal view returns (bytes memory) {
@@ -197,12 +174,6 @@ contract NotesMetadataDescriptor is IERC3525MetadataDescriptor {
           /* solhint-disable */
           '{"underlying":"',
           StringsUpgradeable.toHexString(slotDetail.underlying),
-          '","vesting_type":"',
-          uint256(slotDetail.vestingType).toString(),
-          '","maturity":',
-          uint256(slotDetail.maturity).toString(),
-          ',"term":',
-          uint256(slotDetail.term).toString(),
           '}'
           /* solhint-enable */
         )
@@ -250,7 +221,7 @@ contract NotesMetadataDescriptor is IERC3525MetadataDescriptor {
             '<pattern id="pattern-0-0" patternTransform="matrix(1, 0, 0, 1, 217.516244, 83.242008)" xlink:href="#pattern-0"/>',
             '<pattern x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse" viewBox="0 0 100 100" id="pattern-0">',
               '<rect x="0" y="0" width="50" height="100" style="fill: ',
-                balanceInUsd_ == twapInUsd_ ? "grey"
+                balanceInUsd_ == twapInUsd_ ? "blue"
                   : balanceInUsd_ > twapInUsd_ ? "green" : "red",
               ';"/>',
             '</pattern>',
@@ -263,17 +234,17 @@ contract NotesMetadataDescriptor is IERC3525MetadataDescriptor {
   function _makeupCircles(uint256 balance_, uint8 decimals_) public pure returns (string memory) {
     return string(
       abi.encodePacked(
-        '<circle cx="370.19" cy="104.035" r="11.691" style="fill: red;"/>',
-        '<circle cx="404.808" cy="104.035" r="11.691" style="',
+        '<circle cx="400" cy="170" r="11.691" style="fill: red;"/>',
+        '<circle cx="400" cy="137" r="11.691" style="',
             balance_ >= 1 * (10 ** decimals_ / 10) ? "fill: orange" : "fill-opacity: 0; stroke: #b7bba9;",
         '"/>',
-        '<circle cx="370.19" cy="137.135" r="11.691" style="',
+        '<circle cx="400" cy="104" r="11.691" style="',
             balance_ >= 1 * (10 ** decimals_) ? "fill: yellow" : "fill-opacity: 0; stroke: #b7bba9;",
         '"/>',
-        '<circle cx="404.808" cy="137.135" r="11.691" style="',
+        '<circle cx="400" cy="71" r="11.691" style="',
             balance_ >= 10 * (10 ** decimals_) ? "fill: green" : "fill-opacity: 0; stroke: #b7bba9;",
         '"/>',
-        '<circle cx="370.19" cy="170.234" r="11.691" style="',
+        '<circle cx="400" cy="38" r="11.691" style="',
             balance_ >= 20 * (10 ** decimals_) ? "fill: blue" : "fill-opacity: 0; stroke: #b7bba9;",
         '"/>'
       )
@@ -294,13 +265,13 @@ contract NotesMetadataDescriptor is IERC3525MetadataDescriptor {
 
     return string(
       abi.encodePacked(
-        '<text style="fill: #17be9a; font-family: &quot;Chalkboard SE&quot;; font-size: 18px; white-space: pre;" x="78.947" y="103.353">',
+        '<text style="fill: #FFFFFF; font-family: &quot;Chalkboard SE&quot;; font-size: 18px; white-space: pre;" x="78.947" y="103.353">',
           _formatValue(balance_, decimals_),
         '</text>',
-        '<text style="fill: #33870c; font-family: &quot;Chalkboard SE&quot;; font-size: 12.9px; white-space: pre;" x="211.405" y="170.351">',
+        '<text style="fill: #FFFFFF; font-family: &quot;Chalkboard SE&quot;; font-size: 12.9px; white-space: pre;" x="211.405" y="170.351"> $',
           _formatValue(balanceInUsd_, decimals_ + 8), // decimal: 18 (Ether) + 8 (USD in Chainlink Oracle)
         '</text>',
-        '<text style="fill: #17be9a; font-family: &quot;Chalkboard SE&quot;; font-size: 18px; white-space: pre;" x="320.601" y="103.353">',
+        '<text style="fill: #FFFFFF; font-family: &quot;Chalkboard SE&quot;; font-size: 18px; white-space: pre;" x="320.601" y="103.353">',
           _formatValue(balance_, decimals_),
         '</text>'
       )

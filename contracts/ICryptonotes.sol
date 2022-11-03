@@ -11,9 +11,6 @@ interface ICryptonotes is IERC3525Metadata {
     string description;
     string image;
     address underlying;
-    uint8 vestingType;
-    uint32 maturity;
-    uint32 term;
   }
 
   function mint(address onBehalfOf, SlotDetail memory slotDetail, uint256 value) external payable returns (bool);

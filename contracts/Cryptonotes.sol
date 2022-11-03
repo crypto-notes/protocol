@@ -7,12 +7,19 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {SafeCastUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import { ERC3525Upgradeable } from "@cryptonotes/core/contracts/ERC3525Upgradeable.sol";
+import {ERC3525Upgradeable} from "@cryptonotes/core/contracts/ERC3525Upgradeable.sol";
+import {ERC3525SlotEnumerableUpgradeable} from "@cryptonotes/core/contracts/ERC3525SlotEnumerableUpgradeable.sol";
 import {StringConvertor} from "@cryptonotes/core/contracts/utils/StringConvertor.sol";
 import {ICryptonotes} from "./ICryptonotes.sol";
 
 /// @notice The implementation of the cryptonote demo.
-contract Cryptonotes is ICryptonotes, OwnableUpgradeable, ERC3525Upgradeable, ReentrancyGuardUpgradeable {
+contract Cryptonotes
+  is
+  ICryptonotes,
+  OwnableUpgradeable,
+  ERC3525SlotEnumerableUpgradeable,
+  ReentrancyGuardUpgradeable
+{
   /* ========== error definitions ========== */
 
   error InsufficientFund();
@@ -58,6 +65,12 @@ contract Cryptonotes is ICryptonotes, OwnableUpgradeable, ERC3525Upgradeable, Re
   );
 
   event TopUp(
+    address indexed onBehalfOf,
+    uint256 indexed tokenId,
+    uint256 units
+  );
+
+  event Withdraw(
     address indexed onBehalfOf,
     uint256 indexed tokenId,
     uint256 units
@@ -125,16 +138,13 @@ contract Cryptonotes is ICryptonotes, OwnableUpgradeable, ERC3525Upgradeable, Re
   ) external payable returns (bool) {
     _validating(slotDetail_.underlying, value_);
     
-    uint256 slot = _getSlot(slotDetail_.underlying, slotDetail_.vestingType, slotDetail_.maturity, slotDetail_.term);
+    uint256 slot = _getSlot(slotDetail_.underlying);
 
     _slotDetails[slot] = SlotDetail({
       name: slotDetail_.name,
       description: slotDetail_.description,
       image: slotDetail_.image,
-      underlying: slotDetail_.underlying,
-      vestingType: slotDetail_.vestingType,
-      maturity: slotDetail_.maturity,
-      term: slotDetail_.term
+      underlying: slotDetail_.underlying
     });
     
     uint256 tokenId_ = _mintValue(onBehalfOf_, slot, value_);
@@ -255,22 +265,29 @@ contract Cryptonotes is ICryptonotes, OwnableUpgradeable, ERC3525Upgradeable, Re
     uint256 slot = slotOf(tokenId_);
     SlotDetail memory sd = _slotDetails[slot];
     address asset = sd.underlying;
-    
+
+    uint256 balance = balanceOf(tokenId_);
+
     if (asset == address(0)) {
       (
         bool sent,
         /** bytes memory data */
-      ) = payable(_msgSender()).call{value: balanceOf(tokenId_)}("");
+      ) = payable(_msgSender()).call{value: balance}("");
       require(sent, "Failed to send Ether");
     } else {
-      IERC20Upgradeable(asset).transfer(_msgSender(), balanceOf(tokenId_));
+      IERC20Upgradeable(asset).transfer(_msgSender(), balance);
     }
 
     _burn(tokenId_);
+    emit Withdraw(_msgSender(), tokenId_, balance);
   }
 
   function setRoundsBack(uint80 roundsBack_) external onlyOwner {
     roundsBack = roundsBack_;
+  }
+
+  function setMetadataDescriptor(address metadataDescriptor_) external onlyOwner {
+    _setMetadataDescriptor(metadataDescriptor_);
   }
 
   /* ========== INTERNAL FUNCTIONS ========== */
@@ -279,23 +296,8 @@ contract Cryptonotes is ICryptonotes, OwnableUpgradeable, ERC3525Upgradeable, Re
   * @dev Generate the value of slot by utilizing keccak256 algorithm to calculate the hash 
   * value of multi properties.
   */
-  function _getSlot(
-    address underlying_,
-    uint8 vestingType_,
-    uint32 maturity_,
-    uint32 term_
-  ) internal pure virtual returns (uint256) {
-    return 
-      uint256(
-        keccak256(
-          abi.encodePacked(
-            underlying_,
-            vestingType_,
-            maturity_,
-            term_
-          )
-        )
-      );
+  function _getSlot(address underlying_) internal pure virtual returns (uint256) {
+    return uint256(keccak256(abi.encodePacked(underlying_)));
   }
 
   /**

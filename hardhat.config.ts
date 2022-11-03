@@ -17,12 +17,12 @@ const config: HardhatUserConfig = {
   },
   networks: {
     goerli: {
-      url: process.env.GOERLI_RPC || '',
+      url: process.env.GOERLI_RPC || 'https://rpc.ankr.com/eth_goerli',
       chainId: 5,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] :  [],
     },
     mumbai: {
-      url: process.env.MUMBAI_RPC || '',
+      url: process.env.MUMBAI_RPC || 'https://rpc.ankr.com/polygon_mumbai',
       chainId: 80001,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] :  [],
     },

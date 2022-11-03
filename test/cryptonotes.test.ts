@@ -13,9 +13,6 @@ interface TokenData {
 }
 
 const AddressZero = constants.AddressZero
-const vestingType = 1
-const maturity = 1
-const term = 0
 
 describe('Commemorative Cryptonotes', function () {
   const mintWithOutDeploy = async (
@@ -30,9 +27,6 @@ describe('Commemorative Cryptonotes', function () {
       description: 'for testing desc',
       image: '',
       underlying: AddressZero, // zero address for ETH on Ethereum networks
-      vestingType,
-      maturity,
-      term
     }
     const tx = await cryptonotes.connect(minter).mint(minter.address, slotDetail, value, { value })
     await tx.wait()
@@ -53,7 +47,7 @@ describe('Commemorative Cryptonotes', function () {
 
   describe('Cryptonotes', function () {
     before(async function () {
-      this.slot = utils.solidityKeccak256(['address', 'uint8', 'uint32', 'uint32'], [AddressZero, vestingType, maturity, term])
+      this.slot = utils.solidityKeccak256(['address'], [AddressZero])
 
       this.signers = await ethers.getSigners()
       this.deployer = this.signers[0]
@@ -65,8 +59,8 @@ describe('Commemorative Cryptonotes', function () {
       const cryptonotes: Cryptonotes = (await this.Cryptonotes.deploy()) as Cryptonotes
       this.cryptonotes = cryptonotes
       
-      const PriceFeed = await ethers.getContractFactory('PriceFeed', this.deployer)
-      const priceFeed = await PriceFeed.deploy()
+      const PriceFeed = await ethers.getContractFactory('MockV3Aggregator', this.deployer)
+      const priceFeed = await PriceFeed.deploy(8, 162559000000)
 
       const NotesMetadataDescriptor = await ethers.getContractFactory('NotesMetadataDescriptor', this.deployer)
       const descriptor = await NotesMetadataDescriptor.deploy()
@@ -90,16 +84,6 @@ describe('Commemorative Cryptonotes', function () {
       expect(await t.cryptonotes['balanceOf(uint256)'](t.id)).to.eq(t.balance)
       expect(await t.cryptonotes.slotOf(t.id)).to.eq(t.slot)
       expect(await t.cryptonotes.totalSupply()).to.eq(1)
-      
-      // const contractURI = await t.cryptonotes.contractURI()
-      // console.log('contract URI:', contractURI)
-
-      // const slot = await t.cryptonotes.slotOf(1)
-      // const slotURI = await t.cryptonotes.slotURI(slot)
-      // console.log('slot URI:', slotURI)
-
-      // const tokenURI = await t.cryptonotes.tokenURI(1)
-      // console.log('token URI:', tokenURI)
     })
 
     it('Topup a note should be successful', async function () {
@@ -216,7 +200,7 @@ describe('Commemorative Cryptonotes', function () {
 
     describe('ERC721 compatible interface', function () {
       it('mint should be success', async function () {
-        const slot = utils.solidityKeccak256(['address', 'uint8', 'uint32', 'uint32'], [AddressZero, vestingType, maturity, term])
+        const slot = utils.solidityKeccak256(['address'], [AddressZero])
         const t = await mint(slot)
         
         await checkTransferEvent(t.cryptonotes, constants.AddressZero, t.owner, t.id)
