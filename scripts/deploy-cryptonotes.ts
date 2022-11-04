@@ -25,10 +25,11 @@ async function main() {
     descriptor.address
   )
   await tx.wait()
+  console.log('Cryptonotes deployed to:', cryptonotes.address)
 
   // const cryptonotes = Cryptonotes.attach('0x')
 
-  // // setup a new metadta descriptor
+  // setup a new metadta descriptor
   // const tx = await cryptonotes.setMetadataDescriptor(descriptor.address)
   // console.log('set descriptor tx hash:', tx.hash)
   // await tx.wait()
@@ -39,8 +40,8 @@ async function main() {
   console.log('name:', name)
   const symbol = await cryptonotes.symbol()
   console.log('symbol:', symbol)
-
-  console.log('Cryptonotes deployed to:', cryptonotes.address)
+  // const tokenURI = await cryptonotes.tokenURI(1)
+  // console.log('token URI:', tokenURI)
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -51,5 +52,5 @@ main().catch((error) => {
 })
 
 // Goerli
-// Descriptor: 0x4051BF4dE0514d5B125eC11064E2dc178ef3e595
-// note: 0x7A5b8136700cc55DA5B1d7E229d87EAE8a06Eff5
+// Descriptor: 0x9723D5cc4098AaB073aD94935aFaFe017e739d98
+// note: 0x587233290b3A8a459367cCF0ff4C5BA0E3525B11

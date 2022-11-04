@@ -174,7 +174,7 @@ contract NotesMetadataDescriptor is IERC3525MetadataDescriptor {
           /* solhint-disable */
           '{"underlying":"',
           StringsUpgradeable.toHexString(slotDetail.underlying),
-          '}'
+          '"}'
           /* solhint-enable */
         )
       );

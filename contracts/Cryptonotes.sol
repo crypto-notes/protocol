@@ -2,6 +2,8 @@
 
 pragma solidity 0.8.17;
 
+import "hardhat/console.sol";
+
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -106,7 +108,7 @@ contract Cryptonotes
 
   function getEthUsdPrice() public view returns (uint256, uint256) {
     (uint80 roundId, int latestPrice,,,) = priceFeed.latestRoundData();
-    
+
     uint256 totalPrice;
     for (uint i = 0; i < 6; i++) {
       uint80 historyRoundId = roundId - roundsBack;
