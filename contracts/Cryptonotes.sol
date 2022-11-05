@@ -110,7 +110,7 @@ contract Cryptonotes
     (uint80 roundId, int latestPrice,,,) = priceFeed.latestRoundData();
 
     uint256 totalPrice;
-    for (uint i = 0; i < 6; i++) {
+    for (uint i = 0; i < 5; i++) {
       uint80 historyRoundId = roundId - roundsBack;
       (uint80 id, int price,,,) = priceFeed.getRoundData(historyRoundId);
       totalPrice += price.toUint256();

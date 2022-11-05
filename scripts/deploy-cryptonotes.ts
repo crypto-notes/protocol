@@ -22,7 +22,7 @@ async function main() {
     'ETHCC',
     18,
     '0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e', // Chainlink ETH/USD price feed address Mumbai: 0x0715A7794a1dc8e42615F059dD6e406A6594651A, Goerli: 0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e
-    descriptor.address
+    '0x34145C89C1ba96C81cd14D09849c5B404bB413e6' //descriptor.address
   )
   await tx.wait()
   console.log('Cryptonotes deployed to:', cryptonotes.address)
@@ -52,5 +52,5 @@ main().catch((error) => {
 })
 
 // Goerli
-// Descriptor: 0x9723D5cc4098AaB073aD94935aFaFe017e739d98
-// note: 0x587233290b3A8a459367cCF0ff4C5BA0E3525B11
+// Descriptor: 0x34145C89C1ba96C81cd14D09849c5B404bB413e6
+// note: 0x1332767E97bceb5185BE87235e35CD4Eaa0b629f

@@ -197,7 +197,7 @@ contract NotesMetadataDescriptor is IERC3525MetadataDescriptor {
     uint8 decimals = _getDecimals(note, tokenId_);
     console.log("decimals:", decimals);
 
-    uint256 twap = (totalPrice * (10 ** decimals)) / 5;
+    uint256 twap = (totalPrice * (10 ** decimals)) / (5 * (10 ** decimals));
 
     uint256 balanceInUsd = balance * latestPrice;
     uint256 twapInUsd = balance * twap;
