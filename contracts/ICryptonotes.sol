@@ -24,12 +24,10 @@ interface ICryptonotes is IERC3525Metadata {
    *  Only authorised owner or operator can execute.
    *
    * @param fromTokenId The tokenId split from.
-   * @param newTokenId The tokenId to be used as to receive the value, must be a non-used one.
    * @param splitUnits The amount to be split from `fromTokenId` to `newTokenId`.
    */
   function split(
     uint256 fromTokenId,
-    uint256 newTokenId,
     uint256 splitUnits
   ) external;
 

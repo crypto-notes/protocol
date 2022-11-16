@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat'
+import { ethers, upgrades } from 'hardhat'
 
 async function main() {
   // @ts-ignore
@@ -6,27 +6,26 @@ async function main() {
   const address = await signer.getAddress()
   console.log('signer address:', address)
 
-  // We get the contract to deploy
-  const NotesMetadataDescriptor = await ethers.getContractFactory('NotesMetadataDescriptor')
-  const descriptor = await NotesMetadataDescriptor.deploy()
-  await descriptor.deployed()
-  console.log('NotesMetadataDescriptor deployed to:', descriptor.address)
+  // Deploy the notes metadata descriptor contract
+  // const NotesMetadataDescriptor = await ethers.getContractFactory('NotesMetadataDescriptor')
+  // const descriptor = await NotesMetadataDescriptor.deploy()
+  // await descriptor.deployed()
+  // console.log('NotesMetadataDescriptor deployed to:', descriptor.address)
 
   const Cryptonotes = await ethers.getContractFactory('Cryptonotes')
 
-  const cryptonotes = await Cryptonotes.deploy()
-  await cryptonotes.deployed()
+  // Upgrades the Cryptonotes contract
+  // const cryptonotes = await upgrades.upgradeProxy('0x', Cryptonotes)
 
-  const tx = await cryptonotes.initialize(
+  const cryptonotes = await upgrades.deployProxy(Cryptonotes, [
     'Ethereum Commemorative Cryptonotes',
     'ETHCC',
     18,
     '0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e', // Chainlink ETH/USD price feed address Mumbai: 0x0715A7794a1dc8e42615F059dD6e406A6594651A, Goerli: 0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e
     '0x34145C89C1ba96C81cd14D09849c5B404bB413e6' //descriptor.address
-  )
-  await tx.wait()
+  ])
   console.log('Cryptonotes deployed to:', cryptonotes.address)
-
+  
   // const cryptonotes = Cryptonotes.attach('0x')
 
   // setup a new metadta descriptor
@@ -53,4 +52,4 @@ main().catch((error) => {
 
 // Goerli
 // Descriptor: 0x34145C89C1ba96C81cd14D09849c5B404bB413e6
-// note: 0x1332767E97bceb5185BE87235e35CD4Eaa0b629f
+// note: 0xA9d1E6C19e3eBc9c9c716a240C751A7c9b19C3bC

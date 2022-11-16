@@ -40,7 +40,7 @@ contract Cryptonotes
   /* ========== STATE VARIABLES ========== */
 
   AggregatorV3Interface internal priceFeed;
-  uint80 private roundsBack = 24;
+  uint80 private roundsBack;
 
   mapping(uint256 => SlotDetail) private _slotDetails;
 
@@ -102,6 +102,7 @@ contract Cryptonotes
     __ReentrancyGuard_init();
     priceFeed = AggregatorV3Interface(priceFeedAddr);
     _setMetadataDescriptor(metadataDescriptor);
+    roundsBack = 24;
   }
 
   /* ========== VIEWS ========== */
@@ -208,23 +209,17 @@ contract Cryptonotes
    *  Only authorised owner or operator can execute.
    *
    * @param fromTokenId_ The tokenId split from.
-   * @param newTokenId_ The tokenId to be used as to receive the value, must be a non-used one.
    * @param splitUnits_ The amount to be split from `fromTokenId_` to `newTokenId_`.
    */
   function split(
     uint256 fromTokenId_,
-    uint256 newTokenId_,
     uint256 splitUnits_
   )
     external
     onlyAuthorised(fromTokenId_)
   {
-    if (_exists(newTokenId_)) {
-      revert TokenAlreadyExisted(newTokenId_);
-    }
-
     address owner = ownerOf(fromTokenId_);
-    _mintValue(owner, slotOf(fromTokenId_), newTokenId_, 0);
+    uint256 newTokenId_ = _mintValue(owner, slotOf(fromTokenId_), 0);
     _transferValue(fromTokenId_, newTokenId_, splitUnits_);
 
     emit Split(owner, fromTokenId_, newTokenId_, splitUnits_);
