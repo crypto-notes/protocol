@@ -101,7 +101,7 @@ describe('Commemorative Cryptonotes', function () {
     it('Split a note to a new tokenId (same owns by Bob) should be successful', async function () {
       expect(await this.cryptonotes['balanceOf(uint256)'](1)).to.eq(utils.parseEther('1'))
 
-      const splitTx = await this.cryptonotes.connect(this.bob)['split(uint256,uint256,uint256)']('1', '2', utils.parseEther('0.5'))
+      const splitTx = await this.cryptonotes.connect(this.bob)['split(uint256,uint256)']('1', utils.parseEther('0.5'))
       await splitTx.wait()
 
       expect(await this.cryptonotes['balanceOf(address)'](this.bob.address)).to.eq(2) // after split the owner should be having 2 tokens
