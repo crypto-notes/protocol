@@ -80,7 +80,7 @@ describe('Commemorative Cryptonotes', function () {
       
       expect(await t.cryptonotes['balanceOf(address)'](this.bob.address)).to.eq(t.id)
       expect(await t.cryptonotes.ownerOf(t.id)).to.eq(this.bob.address)
-      await expect(t.cryptonotes.ownerOf(5)).revertedWith('ERC3525: owner query for nonexistent token')
+      await expect(t.cryptonotes.ownerOf(5)).revertedWith('ERC3525: invalid token ID')
       expect(await t.cryptonotes['balanceOf(uint256)'](t.id)).to.eq(t.balance)
       expect(await t.cryptonotes.slotOf(t.id)).to.eq(t.slot)
       expect(await t.cryptonotes.totalSupply()).to.eq(1)
@@ -106,7 +106,7 @@ describe('Commemorative Cryptonotes', function () {
 
       expect(await this.cryptonotes['balanceOf(address)'](this.bob.address)).to.eq(2) // after split the owner should be having 2 tokens
       expect(await this.cryptonotes.ownerOf(2)).to.eq(this.bob.address)
-      await expect(this.cryptonotes.ownerOf(5)).revertedWith('ERC3525: owner query for nonexistent token')
+      await expect(this.cryptonotes.ownerOf(5)).revertedWith('ERC3525: invalid token ID')
       expect(await this.cryptonotes['balanceOf(uint256)'](1)).to.eq(await this.cryptonotes['balanceOf(uint256)'](2))
       expect(await this.cryptonotes.totalSupply()).to.eq(2) // total supply should be 2 as well
     })
@@ -119,7 +119,7 @@ describe('Commemorative Cryptonotes', function () {
       expect(await this.cryptonotes['balanceOf(address)'](this.alice.address)).to.eq(1)
       expect(await this.cryptonotes.ownerOf(2)).to.eq(this.bob.address)
       expect(await this.cryptonotes.ownerOf(3)).to.eq(this.alice.address)
-      await expect(this.cryptonotes.ownerOf(5)).revertedWith('ERC3525: owner query for nonexistent token')
+      await expect(this.cryptonotes.ownerOf(5)).revertedWith('ERC3525: invalid token ID')
       expect(await this.cryptonotes['balanceOf(uint256)'](2)).to.eq(utils.parseEther('0.3'))
       expect(await this.cryptonotes['balanceOf(uint256)'](3)).to.eq(utils.parseEther('0.2'))
       expect(await this.cryptonotes.totalSupply()).to.eq(3)
@@ -135,7 +135,7 @@ describe('Commemorative Cryptonotes', function () {
       const mergeTx = await this.cryptonotes.connect(this.bob)['merge(uint256,uint256)']('1', '2')
       await mergeTx.wait()
       
-      await expect(this.cryptonotes.ownerOf(1)).revertedWith('ERC3525: owner query for nonexistent token')
+      await expect(this.cryptonotes.ownerOf(1)).revertedWith('ERC3525: invalid token ID')
       expect(await this.cryptonotes['balanceOf(address)'](this.bob.address)).to.eq(1)
       expect(await this.cryptonotes['balanceOf(address)'](this.alice.address)).to.eq(1)
       expect(await this.cryptonotes.ownerOf(2)).to.eq(this.bob.address)
@@ -155,7 +155,7 @@ describe('Commemorative Cryptonotes', function () {
       
       expect(await this.bob.getBalance()).to.eq(prevBalance.add(utils.parseEther('0.8')).sub(gasSpent))
 
-      await expect(this.cryptonotes.ownerOf(2)).revertedWith('ERC3525: owner query for nonexistent token')
+      await expect(this.cryptonotes.ownerOf(2)).revertedWith('ERC3525: invalid token ID')
       expect(await this.cryptonotes['balanceOf(address)'](this.bob.address)).to.eq(0)
       expect(await this.cryptonotes['balanceOf(address)'](this.alice.address)).to.eq(1)
       expect(await this.cryptonotes.ownerOf(3)).to.eq(this.alice.address)
@@ -207,7 +207,7 @@ describe('Commemorative Cryptonotes', function () {
   
         expect(await t.cryptonotes['balanceOf(address)'](t.owner)).to.eq(t.id)
         expect(await t.cryptonotes.ownerOf(t.id)).to.eq(t.owner)
-        await expect(t.cryptonotes.ownerOf(5)).revertedWith('ERC3525: owner query for nonexistent token')
+        await expect(t.cryptonotes.ownerOf(5)).revertedWith('ERC3525: invalid token ID')
         expect(await t.cryptonotes['balanceOf(uint256)'](t.id)).to.eq(t.balance)
         expect(await t.cryptonotes.slotOf(t.id)).to.eq(t.slot)
         expect(await t.cryptonotes.totalSupply()).to.eq(1)
@@ -237,9 +237,9 @@ describe('Commemorative Cryptonotes', function () {
         expect(await t.cryptonotes.getApproved(t.id)).to.eq(approval.address)
         await expect(
           t.cryptonotes['approve(address,uint256)'](approval.address, 5)
-        ).revertedWith('ERC3525: owner query for nonexistent token')
+        ).revertedWith('ERC3525: invalid token ID')
         await expect(t.cryptonotes.getApproved(6)).revertedWith(
-          'ERC3525: approved query for nonexistent token'
+          'ERC3525: invalid token ID'
         )
       })
   
@@ -365,16 +365,16 @@ describe('Commemorative Cryptonotes', function () {
           approval.address,
           approvedValue
         )
-        expect(await t.cryptonotes.allowance(t.id, approval.address)).to.eq(
-          approvedValue
-        )
+        expect(await t.cryptonotes.allowance(t.id, approval.address)).to.eq(approvedValue)
         expect(
           await t.cryptonotes.allowance(
             t.id,
             '0x000000000000000000000000000000000000dEaD'
           )
         ).to.eq(0)
-        expect(await t.cryptonotes.allowance(5, approval.address)).to.eq(0)
+        await expect(t.cryptonotes.allowance(5, approval.address)).revertedWith(
+          'ERC3525: invalid token ID'
+        )
       })
   
       it('transfer value to id should be success', async () => {

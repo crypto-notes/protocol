@@ -16,11 +16,12 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@cryptonotes/core@^0.9.5":
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/@cryptonotes/core/-/core-0.9.5.tgz#8550cce7cf8f8f3349d209bc8c1ad36298f3e9b0"
-  integrity sha512-gyCgvm+EzQrpUpAsfnySkMoRJ4WTzGrd8Vw9D1mlsYY1n6GVNTP+362MnSCl2rHJM5lobu5qQKnWryn0CPDzkg==
+"@cryptonotes/core@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@cryptonotes/core/-/core-1.0.0.tgz#17bda7716ef3b8bd40083f6f56b610147ff54329"
+  integrity sha512-3Mj17jmh8ZxLEK3FUQIDt1w3wbR22WTxKpwanr8XzdQKjKhiJgSTXdPHtKx96HM8lcy6q+6HTo4zak0xCHMtWg==
   dependencies:
+    "@openzeppelin/contracts" "^4.8.0"
     "@openzeppelin/contracts-upgradeable" "^4.7.3"
 
 "@cspotcode/source-map-support@^0.8.0":
@@ -718,6 +719,11 @@
   version "4.7.3"
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.7.3.tgz#939534757a81f8d69cc854c7692805684ff3111e"
   integrity sha512-dGRS0agJzu8ybo44pCIf3xBaPQN/65AIXNgK8+4gzKd5kbvlqyxryUYVLJv7fK98Seyd2hDZzVEHSWAh0Bt1Yw==
+
+"@openzeppelin/contracts@^4.8.0":
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.8.0.tgz#6854c37df205dd2c056bdfa1b853f5d732109109"
+  integrity sha512-AGuwhRRL+NaKx73WKRNzeCxOCOCxpaqF+kp8TJ89QzAipSwZy/NoflkWaL9bywXFRhIzXt8j38sfF7KBKCPWLw==
 
 "@openzeppelin/hardhat-upgrades@^1.21.0":
   version "1.21.0"

@@ -150,7 +150,7 @@ contract Cryptonotes
       underlying: slotDetail_.underlying
     });
     
-    uint256 tokenId_ = _mintValue(onBehalfOf_, slot, value_);
+    uint256 tokenId_ = _mint(_msgSender(), slot, value_);
 
     emit Mint(onBehalfOf_, tokenId_, value_);
     return true;
@@ -158,11 +158,10 @@ contract Cryptonotes
 
   function topUp(address onBehalfOf_, uint256 tokenId_, uint256 value_) external payable returns (bool) {
     uint256 slot = slotOf(tokenId_);
-
     SlotDetail memory slotDetail_ = getSlotDetail(slot);
     _validating(slotDetail_.underlying, value_);
     
-    _topupValue(onBehalfOf_, slot, tokenId_, value_);
+    _mintValue(tokenId_, value_);
 
     emit TopUp(onBehalfOf_, tokenId_, value_);
     return true;
@@ -219,7 +218,7 @@ contract Cryptonotes
     onlyAuthorised(fromTokenId_)
   {
     address owner = ownerOf(fromTokenId_);
-    uint256 newTokenId_ = _mintValue(owner, slotOf(fromTokenId_), 0);
+    uint256 newTokenId_ = _mint(owner, slotOf(fromTokenId_), 0);
     _transferValue(fromTokenId_, newTokenId_, splitUnits_);
 
     emit Split(owner, fromTokenId_, newTokenId_, splitUnits_);
