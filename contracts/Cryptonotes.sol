@@ -9,6 +9,7 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {SafeCastUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {AutomationCompatible} from "@chainlink/contracts/src/v0.8/AutomationCompatible.sol";
 import {ERC3525Upgradeable} from "@cryptonotes/core/contracts/ERC3525Upgradeable.sol";
 import {ERC3525SlotEnumerableUpgradeable} from "@cryptonotes/core/contracts/ERC3525SlotEnumerableUpgradeable.sol";
 import {StringConvertor} from "@cryptonotes/core/contracts/utils/StringConvertor.sol";
@@ -107,18 +108,9 @@ contract Cryptonotes
 
   /* ========== VIEWS ========== */
 
-  function getEthUsdPrice() public view returns (uint256, uint256) {
-    (uint80 roundId, int latestPrice,,,) = priceFeed.latestRoundData();
-
-    uint256 totalPrice;
-    for (uint i = 0; i < 5; i++) {
-      uint80 historyRoundId = roundId - roundsBack;
-      (uint80 id, int price,,,) = priceFeed.getRoundData(historyRoundId);
-      totalPrice += price.toUint256();
-      roundId = id;
-    }
-
-    return (latestPrice.toUint256(), totalPrice);
+  function getUsdPrice() public view returns (uint256) {
+    (,int latestPrice,,,) = priceFeed.latestRoundData();
+    return latestPrice.toUint256();
   }
 
   function getSlotDetail(uint256 slot_) public view returns (SlotDetail memory) {

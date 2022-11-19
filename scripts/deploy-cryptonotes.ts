@@ -7,10 +7,10 @@ async function main() {
   console.log('signer address:', address)
 
   // Deploy the notes metadata descriptor contract
-  // const NotesMetadataDescriptor = await ethers.getContractFactory('NotesMetadataDescriptor')
-  // const descriptor = await NotesMetadataDescriptor.deploy()
-  // await descriptor.deployed()
-  // console.log('NotesMetadataDescriptor deployed to:', descriptor.address)
+  const NotesMetadataDescriptor = await ethers.getContractFactory('NotesMetadataDescriptor')
+  const descriptor = await NotesMetadataDescriptor.deploy()
+  await descriptor.deployed()
+  console.log('NotesMetadataDescriptor deployed to:', descriptor.address)
 
   const Cryptonotes = await ethers.getContractFactory('Cryptonotes')
 
@@ -18,11 +18,11 @@ async function main() {
   // const cryptonotes = await upgrades.upgradeProxy('0x', Cryptonotes)
 
   const cryptonotes = await upgrades.deployProxy(Cryptonotes, [
-    'Ethereum Commemorative Cryptonotes',
-    'ETHCC',
+    'Community Commemorative Cryptonotes',
+    'CCC',
     18,
-    '0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e', // Chainlink ETH/USD price feed address Mumbai: 0x0715A7794a1dc8e42615F059dD6e406A6594651A, Goerli: 0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e
-    '0x34145C89C1ba96C81cd14D09849c5B404bB413e6' //descriptor.address
+    '0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada', // Chainlink price feed: ETH/USD - Goerli: 0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e, MATIC/USD - Mumbai: 0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada, 
+    descriptor.address
   ])
   console.log('Cryptonotes deployed to:', cryptonotes.address)
   
@@ -53,3 +53,7 @@ main().catch((error) => {
 // Goerli
 // Descriptor: 0x34145C89C1ba96C81cd14D09849c5B404bB413e6
 // note: 0xA9d1E6C19e3eBc9c9c716a240C751A7c9b19C3bC
+
+// Mumbai
+// Descriptor: 0xf0Af965386A66a677dF7E463327B6A3494064924
+// note: 0xf0Af965386A66a677dF7E463327B6A3494064924

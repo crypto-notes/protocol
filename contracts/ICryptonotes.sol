@@ -55,8 +55,8 @@ interface ICryptonotes is IERC3525Metadata {
   function getSlotDetail(uint256 slot) external view returns (SlotDetail memory);
 
   /**
-   * @notice Returns the average and total price of last N rounds back from the latest round in Chainlink Oracle.
+   * @notice Returns the latest USD price from Chainlink Oracle.
    *
    */
-  function getEthUsdPrice() external view returns (uint256, uint256);
+  function getUsdPrice() external view returns (uint256);
 }
